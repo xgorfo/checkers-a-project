@@ -7,6 +7,6 @@ Main Features:
 
 - The composition of the team
   
-- Anna - developer
+- Anna Kobitskaya - developer
 - Sergey - developer, idea generator
 - Anfisa Vinogradova - moral and material support, problem solving generator, developer
