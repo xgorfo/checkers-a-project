@@ -56,6 +56,7 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "checkers": "cpp"
+        "checkers": "cpp",
+        "sstream": "cpp"
     }
 }
