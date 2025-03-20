@@ -13,6 +13,16 @@ using std::endl;
 using std::__cxx11::to_string;
 
 
+string multiplying_strings(string str, int cnt) {
+    for (int i = 0; i < cnt - 1; ++i) {
+        str += str;
+    }
+    if (cnt == 0) {
+        return "";
+    }
+    return str;
+}
+
 
 class Checker {
     string val;
@@ -30,7 +40,19 @@ public:
 
 
 vector<vector<string>> view_board(vector<Checker> white_checkers, vector<Checker> black_checkers) {
-    vector<vector<string>> board(9, vector<string> (9, "0"));
+    /*
+    draws a chessboard
+    */
+    vector<vector<string>> board(9, vector<string> (9,  " _ "));
+
+    board[0][0] = "  "; //the upper left cell of the chessboard
+
+    for (int i = 1; i < 9; ++i) { //fills in the top row and the left column with numbers from 1 to 8
+        for (int j = 1; j < 9; ++j) {
+            board[0][j] = " " + to_string(j) + " ";
+            board[i][0] = to_string(i) + " ";
+        }
+    }
 
     for (Checker C : white_checkers) {
         board[C.get_coordinate().first][C.get_coordinate().second] = C.get_val();
@@ -48,33 +70,23 @@ vector<Checker> initial_coordinates(bool is_black) {
     fills in the initial coordinates of the checkers
     */
     vector<Checker> coordinates;
-    if (is_black) {
-        for (int i = 1, num = 1; i < 4; ++i) {
-            if (i % 2 == 0) {
-                for (int j = 1; j < 9; j += 2, ++num) {
-                    coordinates.push_back(Checker("b" + to_string(num), i, j));
-                }
-            }
-            else {
-                for (int j = 2; j < 9; j += 2, ++num) {
-                    coordinates.push_back(Checker("b" + to_string(num), i, j));
-                }
-            }
-        }
+    int item = 1; //the x-axis coordinate of the first black checker
+    string w_or_b = "b";
+    if (is_black == 0) {
+        item = 6; //the x-axis coordinate of the first white checker
+        w_or_b = "w";
     }
 
-    else {
-        for (int i = 6, num = 1; i < 9; ++i) {
-                if (i % 2 == 0) {
-                    for (int j = 1; j < 9; j += 2, ++num) {
-                        coordinates.push_back(Checker("w" + to_string(num), i, j));
-                    }
-                }
-                else {
-                    for (int j = 2; j < 9; j += 2, ++num) {
-                        coordinates.push_back(Checker("w" + to_string(num), i, j));
-                    }
-                }
+    for (int i = item, num = 1; i < item + 3; ++i) { //creates black and white checkers by giving them coordinates and a name
+        if (i % 2 == 0) {
+            for (int j = 1; j < 9; j += 2, ++num) {
+                coordinates.push_back(Checker(w_or_b + to_string(num) + multiplying_strings(" ", 2 - to_string(num).length()), i, j));
+            }
+        }
+        else {
+            for (int j = 2; j < 9; j += 2, ++num) {
+                coordinates.push_back(Checker(w_or_b + to_string(num) + multiplying_strings(" ", 2 - to_string(num).length()), i, j));
+            }
         }
     }
     return coordinates;
@@ -111,7 +123,7 @@ void start_menu() {
     }
     //else if (action == 2) {}
     else if (action == 3){   //exit the game
-        cout << "Thank you for your game! (*´﹀`*)";
+        cout << "Thank you for your game! :)";
         //return -1;
     }
 }
