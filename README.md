@@ -10,7 +10,7 @@ The C++ "Checkers" project is a game where two players can take turns making mov
 
 ## The composition of the team:
 > - Anna Kobitskaya - good person, developer
-> - Sergey Bityutskiy - good person, developer, idea generator
+> - Sergey Bityutskiy - buller c++, good person, developer, idea generator
 > - Anfisa Vinogradova -good person, <sup> moral </sup> and <sup> material </sup> support, problem solving generator, developer
 
 ## Execution format:
