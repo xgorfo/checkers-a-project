@@ -5,7 +5,7 @@ Main Features:
 - Game mode support: against another player.
 - Game rules: checkers move only diagonally, you can take the opponent's pieces, and checkers can become queens.
 
-- The composition of the team
+  The composition of the team
   
 - Anna Kobitskaya - developer
 - Sergey Bityutskiy - developer, idea generator
