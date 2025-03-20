@@ -40,13 +40,13 @@ public:
     pair<int, int> get_coordinate() {
         return coordinate;
     }
-    void set_coordinate(pair<int, int> selected_coordinate) {
-        coordinate = selected_coordinate;
+    void set_coordinate(pair<int, int>* selected_coordinate) {
+        coordinate = *selected_coordinate;
     }
 };
 
 
-vector<vector<string>> create_board(vector<Checker> white_checkers, vector<Checker> black_checkers) {
+vector<vector<string>> create_board(vector<Checker>* white_checkers, vector<Checker>* black_checkers) {
     /*
     draws a chessboard
     */
@@ -61,10 +61,10 @@ vector<vector<string>> create_board(vector<Checker> white_checkers, vector<Check
         }
     }
 
-    for (Checker C : white_checkers) {
+    for (Checker C : *white_checkers) {
         board[C.get_coordinate().first][C.get_coordinate().second] = C.get_val();
     }
-    for (Checker C : black_checkers) {
+    for (Checker C : *black_checkers) {
         board[C.get_coordinate().first][C.get_coordinate().second] = C.get_val();
     }
 
@@ -100,25 +100,25 @@ vector<Checker> create_coordinates(bool is_black) {
 }
 
 
-vector<Checker> find_user_checkers(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black) {
+vector<Checker> find_user_checkers(vector<Checker>* white_checkers, vector<Checker>* black_checkers, bool is_black) {
     vector<Checker> user_checkers;
     if (is_black) {
-        for (int i = 0; i < black_checkers.size(); ++i) {
-            user_checkers.push_back(black_checkers[i]);
+        for (size_t i = 0; i < *black_checkers.size(); ++i) {
+            user_checkers.push_back(*black_checkers[i]);
         }
     }
     else {
-        for (int i = 0; i < white_checkers.size(); ++i) {
-            user_checkers.push_back(white_checkers[i]);
+        for (size_t i = 0; i < *white_checkers.size(); ++i) {
+            user_checkers.push_back(*white_checkers[i]);
         }
     }
     return user_checkers;
 }
 
 
-vector<pair<int, int>> find_free_coordinates(vector<Checker> white_checkers, vector<Checker> black_checkers) {
+vector<pair<int, int>> find_free_coordinates(vector<Checker>* white_checkers, vector<Checker>* black_checkers) {
     vector<pair<int, int>> free_coordinates;
-    vector<vector<string>> board = create_board(white_checkers, black_checkers);
+    vector<vector<string>> board = create_board(&white_checkers, &black_checkers);
 
     for (int i = 1; i < 9; ++i) {
         for (int j = 1; j < 9; ++j) {
@@ -137,7 +137,7 @@ vector<pair<int, int>> find_free_coordinates(vector<Checker> white_checkers, vec
 }*/
 
 
-void user_move(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black) {
+vector<vector<Checker>> user_move(vector<Checker> *white_checkers, vector<Checker> *black_checkers, bool is_black) {
     if (is_black) {
         cout << "\n\t ** black's move ** \n"; //!!!!! прописать правила игры !!!!!
     }
@@ -145,13 +145,26 @@ void user_move(vector<Checker> white_checkers, vector<Checker> black_checkers, b
         cout << "\n\t ** white's move ** \n"; //!!!!! прописать правила игры !!!!!
     }
     
-    vector<Checker> user_checkers = find_user_checkers(white_checkers, black_checkers, is_black);
+    vector<Checker> user_checkers = find_user_checkers(&white_checkers, &black_checkers, is_black);
     vector<int> possible_numbers(12);
-    vector<pair<int, int>> possible_coordinates = find_free_coordinates(white_checkers, black_checkers);
+    vector<pair<int, int>> possible_coordinates = find_free_coordinates(&white_checkers, &black_checkers);
 
-    for (int i = 0; i < user_checkers.size(); ++i) { //possible numbers of the 'live' checkers
+    for (size_t i = 0; i < user_checkers.size(); ++i) { //possible numbers of the 'live' checkers
         possible_numbers[i] = user_checkers[i].get_num();
     }
+
+    for (Checker C : user_checkers) {
+        cout << C.get_val() << ' ' << C.get_coordinate().first << ' ' << C.get_coordinate().second << endl;
+    }
+    for (int n : possible_numbers) {
+        cout << n << ' ';
+    }
+    cout << endl;
+    for (pair<int, int> coo : possible_coordinates) {
+        cout << coo.first << ' ' << coo.second << endl; 
+    }
+    cout << endl;
+
 
     int selected_num;
     pair<int, int> selected_coordinate;
@@ -168,34 +181,29 @@ void user_move(vector<Checker> white_checkers, vector<Checker> black_checkers, b
     cin >> x >> y;
     selected_coordinate = {x, y};
     while (count(possible_coordinates.begin(), possible_coordinates.end(), selected_coordinate) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
-        cout << "Choose from the 'live' checkers: ";
+        cout << "Choose from the free cells: ";
         cin >> x >> y;
         selected_coordinate = {x, y};
     }
 
-    vector<vector<Checker>> checkers = {user_checkers, white_checkers, black_checkers};
+    vector<vector<Checker>> checkers = {*white_checkers, *black_checkers};
 
-    for (Checker C : checkers[0]) {
+    for (Checker C : user_checkers) {
         if (C.get_num() == selected_num) {
-            C.set_coordinate(selected_coordinate);
+            C.set_coordinate(&selected_coordinate);
         }
     }
-    int n = 1;
+    int n = 0;
     if (is_black) {
-        n = 2;
+        n = 1;
     }
     for (Checker C : checkers[n]) {
         if (C.get_num() == selected_num) {
-            C.set_coordinate(selected_coordinate);
+            C.set_coordinate(&selected_coordinate);
         }
     }
 
-    for (vector<string> vec : create_board(white_checkers, black_checkers)) { //draws a chessboard
-        for (string value : vec) {
-            cout << value << ' ';
-        }
-        cout << endl;
-    }
+    return checkers;
 
 }
 
@@ -204,7 +212,7 @@ string game() {
     vector<Checker> white_checkers = create_coordinates(0); //0 - white checkers
     vector<Checker> black_checkers = create_coordinates(1); //1 - black checkers
 
-    for (vector<string> vec : create_board(white_checkers, black_checkers)) { //draws a chessboard
+    for (vector<string> vec : create_board(&white_checkers, &black_checkers)) { //draws a chessboard
         for (string value : vec) {
             cout << value << ' ';
         }
@@ -213,8 +221,12 @@ string game() {
 
     bool is_black_move = 0;
     string winner = "_";  // "_"/"white"/"black"/"draw"
+    vector<vector<Checker>> ans;
     do {
-        user_move(white_checkers, black_checkers, is_black_move);
+        ans = user_move(&white_checkers, &black_checkers, is_black_move);
+        copy(ans[0].begin(), ans[0].end(), white_checkers.begin());
+        copy(ans[1].begin(), ans[1].end(), black_checkers.begin());
+
         is_black_move = !is_black_move;
         if (white_checkers.size() == 0) {
             winner = "black";
