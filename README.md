@@ -9,12 +9,12 @@ The C++ "Checkers" project is a game where two players can take turns making mov
 > - Game rules: checkers move only diagonally, you can take the opponent's pieces, and checkers can become queens.
 
 ## The composition of the team:
-- Anna Kobitskaya - developer
-- Sergey Bityutskiy - developer, idea generator
-- Anfisa Vinogradova - moral and material support, problem solving generator, developer
+> - Anna Kobitskaya - developer
+> - Sergey Bityutskiy - developer, idea generator
+> - Anfisa Vinogradova - <sup> moral </sup> and <sup> material </sup> support, problem solving generator, developer
 
 ## Execution format:
-github (https://github.com/xgorfo/checkers-a-project.git)
+> github (https://github.com/xgorfo/checkers-a-project.git)
 
 ## Execution stack:
-Windows.h
+> Windows.h
