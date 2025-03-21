@@ -132,9 +132,21 @@ vector<pair<int, int>> find_free_coordinates(vector<Checker>& white_checkers, ve
 }
 
 
-/*vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black) {
+vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black, pair<int, int> coordinate) {
     vector<pair<int, int>> free_coordinates = find_free_coordinates(white_checkers, black_checkers);
-}*/
+    vector<pair<int, int>> possible_coordinates;
+    vector<vector<string>> board = create_board(white_checkers, black_checkers);
+
+    for (pair<int, int> para : free_coordinates) {
+        if (abs(para.first - coordinate.first) == 1 && abs(para.second - coordinate.second) == 1) {
+            possible_coordinates.push_back(para);
+        }
+        vector<pair<int, int>> poss_coo = {pair<coordinate.first + 1, coordinate.first + 1>, };
+        else if (abs(para.first - coordinate.first) == 2 && abs(para.second - coordinate.second) == 2 && board[]) {
+            possible_coordinates.push_back(para);
+        }
+    }
+}
 
 
 vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checker> &black_checkers, bool is_black) {
@@ -153,6 +165,7 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
         possible_numbers[i] = user_checkers[i].get_num();
     }
 
+    /*
     for (Checker C : user_checkers) {
         cout << C.get_val() << ' ' << C.get_coordinate().first << ' ' << C.get_coordinate().second << endl;
     }
@@ -164,6 +177,7 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
         cout << coo.first << ' ' << coo.second << endl; 
     }
     cout << endl;
+    */
 
 
     int selected_num;
@@ -172,7 +186,7 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
     cout << "\t Select the checker you're going to use and enter its number: ";
     cin >> selected_num;
     while (count(possible_numbers.begin(), possible_numbers.end(), selected_num) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
-        cout << "Choose from the 'live' checkers: ";
+        cout << "\tChoose from the 'live' checkers: ";
         cin >> selected_num;
     }
 
@@ -181,7 +195,7 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
     cin >> x >> y;
     selected_coordinate = {x, y};
     while (count(possible_coordinates.begin(), possible_coordinates.end(), selected_coordinate) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
-        cout << "Choose from the free cells: ";
+        cout << "\tChoose from the possible cells: ";
         cin >> x >> y;
         selected_coordinate = {x, y};
     }
@@ -192,7 +206,7 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
     if (is_black) {
         n = 1;
     }
-    for (size_t i = 0; i < checkers[n].size(); ++i) {
+    for (size_t i = 0; i < checkers[n].size(); ++i) {  //changes the coordinate of the selected checker to the entered one
         if (checkers[n][i].get_num() == selected_num) {
             checkers[n][i].set_coordinate(selected_coordinate);
         }
