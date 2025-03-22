@@ -1,4 +1,4 @@
-# checkers-a-project
+  # Сheckers a project
 ## Idea
 
 The C++ "Checkers" project is a game where two players can take turns making moves. Players move their checkers around the board, can take the opponent's checkers, and also turn their pieces into queens if they reach the last line.
