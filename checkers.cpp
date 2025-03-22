@@ -48,7 +48,7 @@ public:
 
 vector<vector<string>> create_board(vector<Checker>& white_checkers, vector<Checker>& black_checkers) {
     /*
-    draws a chessboard
+    creates a chessboard
     */
     vector<vector<string>> board(9, vector<string> (9,  " _ "));
 
@@ -153,60 +153,94 @@ vector<string> find_w_or_b_values(vector<Checker> w_or_b_checkers) {
     return w_or_b_values;
 }
 
+
 vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black, pair<int, int> coordinate) {
     vector<pair<int, int>> free_coordinates = find_free_coordinates(white_checkers, black_checkers);
-    vector<pair<int, int>> possible_coordinates;
+    vector<pair<int, int>> possible_coordinates_1(4);
+    vector<pair<int, int>> possible_coordinates_2(4);
+    vector<pair<int, int>> possible_coordinates(8);
     vector<vector<string>> board = create_board(white_checkers, black_checkers);
     vector<vector<Checker>> checkers = {white_checkers, black_checkers};
+    vector<string> w_or_b_values = find_w_or_b_values(checkers[!is_black]);
 
-    for (pair<int, int> para : free_coordinates) {
-        if (abs(para.first - coordinate.first) == 1 && abs(para.second - coordinate.second) == 1) {
-            possible_coordinates.push_back(para);
+    for (size_t i = 0, j = 0; i < free_coordinates.size(); ++i) {
+        if (abs(free_coordinates[i].first - coordinate.first) == 1 && abs(free_coordinates[i].second - coordinate.second) == 1) {
+            possible_coordinates_1[j] = free_coordinates[i];
+            ++j;
         }
-        else if (coordinate.first + 2 == para.first && coordinate.second + 2 == para.second) {
-            if (
-                count(find_w_or_b_values(checkers[!is_black]).begin(),
-                find_w_or_b_values(checkers[!is_black]).end(), 
-                board[coordinate.first + 1][coordinate.second + 1]) == 1
-            ) {
-                possible_coordinates.push_back(para);
+    }
+    for (size_t i = 0, j = 0; i < free_coordinates.size(); ++i) {
+        if (free_coordinates[i].first == coordinate.first + 2 && free_coordinates[i].second == coordinate.second + 2) {
+            if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first + 1][coordinate.second + 1])) {
+                possible_coordinates_2[j] = free_coordinates[i];
+                ++j;
             }
         }
-        else if (coordinate.first - 2 == para.first && coordinate.second - 2 == para.second) {
-            if (
-                count(find_w_or_b_values(checkers[!is_black]).begin(),
-                find_w_or_b_values(checkers[!is_black]).end(), 
-                board[coordinate.first - 1][coordinate.second - 1]) == 1
-            ) {
-                possible_coordinates.push_back(para);
+        else if (free_coordinates[i].first == coordinate.first - 2 && free_coordinates[i].second == coordinate.second - 2) {
+            if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first - 1][coordinate.second - 1])) {
+                possible_coordinates_2[j] = free_coordinates[i];
+                ++j;
             }
         }
-        else if (coordinate.first + 2 == para.first && coordinate.second - 2 == para.second) {
-            if (
-                count(find_w_or_b_values(checkers[!is_black]).begin(),
-                find_w_or_b_values(checkers[!is_black]).end(), 
-                board[coordinate.first + 1][coordinate.second - 1]) == 1
-            ) {
-                possible_coordinates.push_back(para);
+        else if (free_coordinates[i].first == coordinate.first - 2 && free_coordinates[i].second == coordinate.second + 2) {
+            if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first - 1][coordinate.second + 1])) {
+                possible_coordinates_2[j] = free_coordinates[i];
+                ++j;
             }
         }
-        else if (coordinate.first - 2 == para.first && coordinate.second + 2 == para.second) {
-            if (
-                count(find_w_or_b_values(checkers[!is_black]).begin(),
-                find_w_or_b_values(checkers[!is_black]).end(), 
-                board[coordinate.first - 1][coordinate.second + 1]) == 1
-            ) {
-                possible_coordinates.push_back(para);
+        else if (free_coordinates[i].first == coordinate.first + 2 && free_coordinates[i].second == coordinate.second - 2) {
+            if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first + 1][coordinate.second - 1])) {
+                possible_coordinates_2[j] = free_coordinates[i];
+                ++j;
             }
         }
     }
+
+    copy(possible_coordinates_1.begin(), possible_coordinates_1.end(), possible_coordinates.begin());
+    copy(possible_coordinates_2.begin(), possible_coordinates_2.end(), possible_coordinates.begin() + possible_coordinates_1.size());
 
     return possible_coordinates;
 }
 
 
+int check_possible_num(vector<int> possible_numbers, int &selected_num) {
+    /*
+    checks that a "live" checker is selected and returns the finally selected checkers number.
+    */
+    while (count(possible_numbers.begin(), possible_numbers.end(), selected_num) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
+        cout << "\t Enter the number of the available checkers: ";
+        cin >> selected_num;
+    }
+    return selected_num;
+}
+
+
+bool check_possible_coordinates(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black, pair<int, int> coordinate_of_the_selected_num) {
+    /*
+    checking for possible coordinates of the checker
+    */
+    vector<pair<int, int>> possible_coordinates = find_possible_coordinates(white_checkers, black_checkers, is_black, coordinate_of_the_selected_num);
+    
+    bool f = false;
+    for (pair<int, int> p : possible_coordinates) {  //checks if there are possible coordinates
+        if (p.first != 0) {
+            f = true;
+            break;
+        }
+    }
+
+    return f;
+}
+
+
 vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checker> &black_checkers, bool is_black) {
     vector<vector<Checker>> checkers = {white_checkers, black_checkers};
+    int selected_num;
+    pair<int, int> selected_coordinate;
+    pair<int, int> coordinate_of_the_selected_num;
+    vector<Checker> user_checkers = find_user_checkers(checkers[0], checkers[1], is_black);
+    vector<int> possible_numbers(12);
+
     if (is_black) {
         cout << "\n\t ** black's move ** \n"; //!!!!! прописать правила игры !!!!!
     }
@@ -214,42 +248,47 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
         cout << "\n\t ** white's move ** \n"; //!!!!! прописать правила игры !!!!!
     }
     
-    vector<Checker> user_checkers = find_user_checkers(checkers[0], checkers[1], is_black);
-    vector<int> possible_numbers(12);
-
     for (size_t i = 0; i < user_checkers.size(); ++i) { //possible numbers of the 'live' checkers
         possible_numbers[i] = user_checkers[i].get_num();
     }
 
-    int selected_num;
-    pair<int, int> selected_coordinate;
-
     cout << "\t Select the checker you're going to use and enter its number: ";
     cin >> selected_num;
-    while (count(possible_numbers.begin(), possible_numbers.end(), selected_num) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
-        cout << "\tChoose from the 'live' checkers: ";
-        cin >> selected_num;
-    }
-    
-    pair<int, int> coordinate_of_the_selected_num;
-    for (Checker C : checkers[is_black]){
+    selected_num = check_possible_num(possible_numbers, selected_num);
+    for (Checker C : user_checkers) {
         if (C.get_num() == selected_num) {
             coordinate_of_the_selected_num = C.get_coordinate();
         }
     }
-    cout << "\t coordinate_of_the_selected_num : " << coordinate_of_the_selected_num.first << ' ' << coordinate_of_the_selected_num.second << endl;
-
-    vector<pair<int, int>> possible_coordinates = find_possible_coordinates(white_checkers, black_checkers, is_black, coordinate_of_the_selected_num);
-    for (pair<int, int> p : possible_coordinates) {
-        cout << p.first << ';' << p.second << ' ';
+    
+    while (check_possible_coordinates(checkers[0], checkers[1], is_black, coordinate_of_the_selected_num) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
+        cout << "\t Choose the number of the checker that has possible coordinates: ";
+        cin >> selected_num;
+        selected_num = check_possible_num(possible_numbers, selected_num);
+        for (Checker C : user_checkers) {
+            if (C.get_num() == selected_num) {
+                coordinate_of_the_selected_num = C.get_coordinate();
+            }
+        }
     }
+    
+    vector<pair<int, int>> possible_coordinates = find_possible_coordinates(checkers[0], checkers[1], is_black, coordinate_of_the_selected_num);
+
+    cout << "\t Possible coordinates: ";
+    for (pair<int, int> p : possible_coordinates) {
+        if (p.first != 0) {
+            cout << '{' << p.first << ';' << p.second << '}' << ' ';
+        }
+    }
+    cout << endl;
 
     cout << "\t Enter the coordinate where you want to move the checker: ";
     int x, y;
     cin >> x >> y;
     selected_coordinate = {x, y};
+
     while (count(possible_coordinates.begin(), possible_coordinates.end(), selected_coordinate) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
-        cout << "\tChoose from the possible cells: ";
+        cout << "\t Choose from the possible cells: ";
         cin >> x >> y;
         selected_coordinate = {x, y};
     }
