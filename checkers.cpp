@@ -233,6 +233,45 @@ bool check_possible_coordinates(vector<Checker> white_checkers, vector<Checker> 
 }
 
 
+vector<vector<Checker>> removing_eaten_checker(vector<vector<Checker>> &checkers, bool is_black, vector<pair<int, int>> possible_coordinates, pair<int, int> selected_coordinate, pair<int, int> coordinate_of_the_selected_num) {
+    int x_eaten_checker;
+    int y_eaten_checker;
+    for (size_t i = 0; i < possible_coordinates.size(); ++i) { //removing the eaten checkers
+        if (possible_coordinates[i] == selected_coordinate && i >= 4) {
+            int x_coordinate_difference = selected_coordinate.first - coordinate_of_the_selected_num.first;
+            int y_coordinate_difference = selected_coordinate.second - coordinate_of_the_selected_num.second;
+
+            if (x_coordinate_difference > 0) {
+                x_eaten_checker = coordinate_of_the_selected_num.first + 1;
+            }
+            else {
+                x_eaten_checker = coordinate_of_the_selected_num.first - 1;
+            }
+
+            if (y_coordinate_difference > 0) {
+                y_eaten_checker = coordinate_of_the_selected_num.second + 1;
+            }
+            else {
+                y_eaten_checker = coordinate_of_the_selected_num.second - 1;
+            }
+            
+            pair<int, int> coordinate_eaten_checker = {x_eaten_checker, y_eaten_checker};
+            if (checkers[!is_black].size() == 1) {
+                checkers[!is_black] = {};
+            }
+            else {
+                for (size_t i = 0; i < checkers[!is_black].size(); ++i) {
+                    if (checkers[!is_black][i].get_coordinate() == coordinate_eaten_checker) {
+                        checkers[!is_black].erase(checkers[!is_black].begin() + i);
+                    }
+                }
+            }
+        }
+    }
+    return checkers;
+}
+
+
 vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checker> &black_checkers, bool is_black) {
     vector<vector<Checker>> checkers = {white_checkers, black_checkers};
     int selected_num;
@@ -293,6 +332,8 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
         selected_coordinate = {x, y};
     }
 
+    checkers = removing_eaten_checker(checkers, is_black, possible_coordinates, selected_coordinate, coordinate_of_the_selected_num);
+    
     int n = 0;
     if (is_black) {
         n = 1;
@@ -304,7 +345,6 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
     }
 
     return checkers;
-
 }
 
 
@@ -312,7 +352,7 @@ string game() {
     vector<Checker> white_checkers = create_coordinates(0); //0 - white checkers
     vector<Checker> black_checkers = create_coordinates(1); //1 - black checkers
     bool is_black_move = 0;
-    string winner = "_";  // "_"/"white"/"black"/"draw"
+    string winner = "_";  // "_"/"white"/"black"
 
     vector<vector<Checker>> ans;
     do {
@@ -347,13 +387,15 @@ void start_menu() {
     } while (count(possible_actions.begin(), possible_actions.end(), action) == 0);
 
     if (action == 1) {  //start a new game
-        cout << "\n\tLet's play! :)\n";
+        cout << "\n\t Let's play! :)\n";
         string end_of_the_game = game();
+        cout << "\t The end of the game!\n";
+        cout << "\t The victory goes to the player who played for the " << end_of_the_game << " checkers!";
+        cout << "\n\t Thank you for your game! :)";
     }
     //else if (action == 2) {}
     else if (action == 3){   //exit the game
         cout << "\n\tThank you for your game! :)";
-        //return -1;
     }
     else if (action == 4) { //rules of the game of checkers
         cout << "\n\trules: \n";
