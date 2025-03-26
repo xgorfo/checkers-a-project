@@ -2,6 +2,8 @@
 #include <vector>
 #include <sstream>
 #include <bits/stdc++.h>
+#include <string>
+#include "mini_checkers.cpp"
 
 using std::cin;
 using std::cout;
@@ -113,7 +115,7 @@ vector<Checker> create_coordinates(bool is_black) {
 }
 
 
-vector<Checker> find_user_checkers(vector<Checker>& white_checkers, vector<Checker>& black_checkers, bool is_black) {
+vector<Checker> find_user_checkers(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black) {
     vector<Checker> user_checkers;
     if (is_black) {
         for (size_t i = 0; i < black_checkers.size(); ++i) {
@@ -129,7 +131,7 @@ vector<Checker> find_user_checkers(vector<Checker>& white_checkers, vector<Check
 }
 
 
-vector<pair<int, int>> find_free_coordinates(vector<Checker>& white_checkers, vector<Checker>& black_checkers) {
+vector<pair<int, int>> find_free_coordinates(vector<Checker> white_checkers, vector<Checker> black_checkers) {
     vector<pair<int, int>> free_coordinates;
     vector<vector<string>> board = create_board(white_checkers, black_checkers);
 
@@ -233,7 +235,7 @@ bool check_possible_coordinates(vector<Checker> white_checkers, vector<Checker> 
 }
 
 
-vector<vector<Checker>> removing_eaten_checker(vector<vector<Checker>> &checkers, bool is_black, vector<pair<int, int>> possible_coordinates, pair<int, int> selected_coordinate, pair<int, int> coordinate_of_the_selected_num) {
+vector<vector<Checker>> removing_eaten_checker(vector<vector<Checker>>& checkers, bool is_black, vector<pair<int, int>> possible_coordinates, pair<int, int> selected_coordinate, pair<int, int> coordinate_of_the_selected_num) {
     int x_eaten_checker;
     int y_eaten_checker;
     for (size_t i = 0; i < possible_coordinates.size(); ++i) { //removing the eaten checkers
@@ -272,7 +274,7 @@ vector<vector<Checker>> removing_eaten_checker(vector<vector<Checker>> &checkers
 }
 
 
-vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checker> &black_checkers, bool is_black) {
+vector<vector<Checker>> user_move(vector<Checker>& white_checkers, vector<Checker>& black_checkers, bool is_black) {
     vector<vector<Checker>> checkers = {white_checkers, black_checkers};
     int selected_num;
     pair<int, int> selected_coordinate;
@@ -343,7 +345,6 @@ vector<vector<Checker>> user_move(vector<Checker> &white_checkers, vector<Checke
             checkers[n][i].set_coordinate(selected_coordinate);
         }
     }
-
     return checkers;
 }
 
@@ -358,8 +359,8 @@ string game() {
     do {
         view_board(white_checkers, black_checkers);
         ans = user_move(white_checkers, black_checkers, is_black_move);
-        copy(ans[0].begin(), ans[0].end(), white_checkers.begin());
-        copy(ans[1].begin(), ans[1].end(), black_checkers.begin());
+        white_checkers = ans[0];
+        black_checkers = ans[1];
 
         is_black_move = !is_black_move;
         if (white_checkers.size() == 0) {
@@ -379,21 +380,23 @@ void start_menu() {
     displays the start menu
     */
     int action;  //user's choice
-    cout << "Your possible actions:\n\t1 Start a new game\n\t2 It hasn't been thought out yet\n\t3 Exit the game\n\t4 Rules of the game of checkers";
+    cout << "Your possible actions:\n\t1 Start a game of a chess\n\t2 Start a game of a mini chess\n\t3 Exit the game\n\t4 Rules of the game of checkers";
     vector<int> possible_actions = {1, 2, 3, 4};
     do {  //asks you to enter a number until the user enters one of the possible numbers
         cout << "\nEnter a number from 1 to 4 : ";
         cin >> action;
     } while (count(possible_actions.begin(), possible_actions.end(), action) == 0);
 
-    if (action == 1) {  //start a new game
+    if (action == 1) {  //start a game of a chess
         cout << "\n\t Let's play! :)\n";
         string end_of_the_game = game();
         cout << "\t The end of the game!\n";
         cout << "\t The victory goes to the player who played for the " << end_of_the_game << " checkers!";
         cout << "\n\t Thank you for your game! :)";
     }
-    //else if (action == 2) {}
+    else if (action == 2) { //start a game of a mini chess
+        check();
+    }
     else if (action == 3){   //exit the game
         cout << "\n\tThank you for your game! :)";
     }
