@@ -166,9 +166,11 @@ vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers,
     vector<string> w_or_b_values = find_w_or_b_values(checkers[!is_black]);
 
     for (size_t i = 0, j = 0; i < free_coordinates.size(); ++i) {
-        if (abs(free_coordinates[i].first - coordinate.first) == 1 && abs(free_coordinates[i].second - coordinate.second) == 1) {
-            possible_coordinates_1[j] = free_coordinates[i];
-            ++j;
+        if (abs(free_coordinates[i].second - coordinate.second) == 1) {
+            if ((is_black && (free_coordinates[i].first - coordinate.first) == 1) || (!is_black && (free_coordinates[i].first - coordinate.first) == -1)) {
+                possible_coordinates_1[j] = free_coordinates[i];
+                ++j;
+            }
         }
     }
     for (size_t i = 0, j = 0; i < free_coordinates.size(); ++i) {
@@ -380,10 +382,10 @@ void start_menu() {
     displays the start menu
     */
     int action;  //user's choice
-    cout << "Your possible actions:\n\t1 Start a game of a chess\n\t2 Start a game of a mini chess\n\t3 Exit the game\n\t4 Rules of the game of checkers";
-    vector<int> possible_actions = {1, 2, 3, 4};
+    cout << "Your possible actions:\n\t1 Start a game of a chess\n\t2 Start a game of a mini chess\n\t3 Exit the game";
+    vector<int> possible_actions = {1, 2, 3};
     do {  //asks you to enter a number until the user enters one of the possible numbers
-        cout << "\nEnter a number from 1 to 4 : ";
+        cout << "\nEnter a number from 1 to 3 : ";
         cin >> action;
     } while (count(possible_actions.begin(), possible_actions.end(), action) == 0);
 
@@ -399,10 +401,6 @@ void start_menu() {
     }
     else if (action == 3){   //exit the game
         cout << "\n\tThank you for your game! :)";
-    }
-    else if (action == 4) { //rules of the game of checkers
-        cout << "\n\trules: \n";
-        //rules_of_the_game()
     }
 }
 
