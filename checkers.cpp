@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include <bits/stdc++.h>
 #include <string>
 #include "mini_checkers.cpp"
 
@@ -10,9 +9,35 @@ using std::cout;
 using std::vector;
 using std::pair;
 using std::string;
-using std::count;
 using std::endl;
 using std::__cxx11::to_string;
+
+
+int cnt_pair(vector<pair<int, int>> vec, pair<int, int> val) {
+    int countt = 0;
+    for (pair<int, int> s : vec) {
+        countt += (s == val);
+    }
+    return countt;
+}
+
+
+int cnt_str(vector<string> vec, string val) {
+    int countt = 0;
+    for (string s : vec) {
+        countt += (s == val);
+    }
+    return countt;
+}
+
+
+int cnt_int(vector<int> vec, int val) {
+    int countt = 0;
+    for (int s : vec) {
+        countt += (s == val);
+    }
+    return countt;
+}
 
 
 string multiplying_strings(string str, int cnt) {
@@ -189,7 +214,7 @@ vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers,
     for (size_t i = 0, j = 0; i < free_coordinates.size(); ++i) {
         if (free_coordinates[i].first == coordinate.first + 2 && free_coordinates[i].second == coordinate.second + 2) {
             //the condition is that the coordinate of the free cell is 2 diagonally away (2 to the right and 2 down)
-            if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first + 1][coordinate.second + 1])) {
+            if (cnt_str(w_or_b_values, board[coordinate.first + 1][coordinate.second + 1])) {
                 //checks whether the value of the coordinate of the chessboard located at a distance of 1 diagonally (right 1 and down 1) is one of the values of the opponent's chess
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
@@ -197,27 +222,31 @@ vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers,
         }
         else if (free_coordinates[i].first == coordinate.first - 2 && free_coordinates[i].second == coordinate.second - 2) {
             //the condition is that the coordinate of the free cell is 2 diagonally away (2 to the left and 2 down)
-            if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first - 1][coordinate.second - 1])) {
+            if (cnt_str(w_or_b_values, board[coordinate.first - 1][coordinate.second - 1])) {
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
             }
         }
         else if (free_coordinates[i].first == coordinate.first - 2 && free_coordinates[i].second == coordinate.second + 2) {
-            if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first - 1][coordinate.second + 1])) {
+            if (cnt_str(w_or_b_values, board[coordinate.first - 1][coordinate.second + 1])) {
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
             }
         }
         else if (free_coordinates[i].first == coordinate.first + 2 && free_coordinates[i].second == coordinate.second - 2) {
-            if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first + 1][coordinate.second - 1])) {
+            if (cnt_str(w_or_b_values, board[coordinate.first + 1][coordinate.second - 1])) {
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
             }
         }
     }
 
-    copy(possible_coordinates_1.begin(), possible_coordinates_1.end(), possible_coordinates.begin());
-    copy(possible_coordinates_2.begin(), possible_coordinates_2.end(), possible_coordinates.begin() + possible_coordinates_1.size());
+    for (size_t i = 0; i < possible_coordinates_1.size(); ++i) {
+        possible_coordinates[i] = possible_coordinates_1[i];
+    }
+    for (size_t i = 0; i < possible_coordinates_2.size(); ++i) {
+        possible_coordinates[i + 4] = possible_coordinates_2[i];
+    }
 
     return possible_coordinates;
 }
@@ -227,7 +256,7 @@ int check_possible_num(vector<int> possible_numbers, int &selected_num) {
     /*
     checks that a "live" checker is selected and returns the finally selected checkers number.
     */
-    while (count(possible_numbers.begin(), possible_numbers.end(), selected_num) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
+    while (cnt_int(possible_numbers, selected_num) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
         cout << "\t Enter the number of the available checkers: ";
         cin >> selected_num;
     }
@@ -346,7 +375,7 @@ vector<vector<Checker>> user_move(vector<Checker>& white_checkers, vector<Checke
     cin >> x >> y;
     selected_coordinate = {x, y};
 
-    while (count(possible_coordinates.begin(), possible_coordinates.end(), selected_coordinate) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
+    while (cnt_pair(possible_coordinates, selected_coordinate) == 0) {  //asks you to enter a number until the user enters one of the possible numbers
         cout << "\t Choose from the possible cells: ";
         cin >> x >> y;
         selected_coordinate = {x, y};
@@ -403,7 +432,7 @@ void start_menu() {
     do {  //asks you to enter a number until the user enters one of the possible numbers
         cout << "\nEnter a number from 1 to 3 : ";
         cin >> action;
-    } while (count(possible_actions.begin(), possible_actions.end(), action) == 0);
+    } while (cnt_int(possible_actions, action) == 0);
 
     if (action == 1) {  //start a game of a chess
         cout << "\n\t Let's play! :)\n";
