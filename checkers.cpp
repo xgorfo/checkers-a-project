@@ -9,11 +9,14 @@ using std::cout;
 using std::vector;
 using std::pair;
 using std::string;
+using std::to_string;
 using std::endl;
-using std::__cxx11::to_string;
 
 
 int cnt_pair(vector<pair<int, int>> vec, pair<int, int> val) {
+    /*
+    counts the pair of transmitted numbers in the transmitted vector
+    */
     int countt = 0;
     for (pair<int, int> s : vec) {
         countt += (s == val);
@@ -23,6 +26,9 @@ int cnt_pair(vector<pair<int, int>> vec, pair<int, int> val) {
 
 
 int cnt_str(vector<string> vec, string val) {
+    /*
+    counts the line of transmitted numbers in the transmitted vector
+    */
     int countt = 0;
     for (string s : vec) {
         countt += (s == val);
@@ -32,6 +38,9 @@ int cnt_str(vector<string> vec, string val) {
 
 
 int cnt_int(vector<int> vec, int val) {
+    /*
+    counts the number of transmitted numbers in the transmitted vector
+    */
     int countt = 0;
     for (int s : vec) {
         countt += (s == val);
@@ -41,6 +50,9 @@ int cnt_int(vector<int> vec, int val) {
 
 
 string multiplying_strings(string str, int cnt) {
+    /*
+    multiplies a vector by a number
+    */
     for (int i = 0; i < cnt - 1; ++i) {
         str += str;
     }
@@ -67,7 +79,7 @@ public:
     pair<int, int> get_coordinate() { //return coordinate of the checker
         return coordinate;
     }
-    void set_coordinate(pair<int, int>& selected_coordinate) { //set the coordinate of the checker
+    void set_coordinate(pair<int, int> selected_coordinate) { //set the coordinate of the checker
         coordinate = selected_coordinate;
     }
 };
@@ -127,12 +139,12 @@ vector<Checker> create_coordinates(bool is_black) {
     for (int i = item, num = 1; i < item + 3; ++i) { //creates black and white checkers by giving them coordinates and a name
         if (i % 2 == 0) {
             for (int j = 1; j < 9; j += 2, ++num) {
-                coordinates.push_back(Checker(multiplying_strings(" ", 2 - to_string(num).length()) + w_or_b, num, i, j));
+                coordinates.push_back(Checker(multiplying_strings(" ", 2 - (to_string(num)).length()) + w_or_b, num, i, j));
             }
         }
         else {
             for (int j = 2; j < 9; j += 2, ++num) {
-                coordinates.push_back(Checker(multiplying_strings(" ", 2 - to_string(num).length()) + w_or_b, num, i, j));
+                coordinates.push_back(Checker(multiplying_strings(" ", 2 - (to_string(num)).length()) + w_or_b, num, i, j));
             }
         }
     }
@@ -221,30 +233,35 @@ vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers,
             }
         }
         else if (free_coordinates[i].first == coordinate.first - 2 && free_coordinates[i].second == coordinate.second - 2) {
-            //the condition is that the coordinate of the free cell is 2 diagonally away (2 to the left and 2 down)
+            //the condition is that the coordinate of the free cell is 2 diagonally away (2 to the left and 2 up)
             if (cnt_str(w_or_b_values, board[coordinate.first - 1][coordinate.second - 1])) {
+                //checks whether the value of the coordinate of the chessboard located at a distance of 1 diagonally (left 1 and up 1) is one of the values of the opponent's chess
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
             }
         }
         else if (free_coordinates[i].first == coordinate.first - 2 && free_coordinates[i].second == coordinate.second + 2) {
+            //the condition is that the coordinate of the free cell is 2 diagonally away (2 to the right and 2 up)
             if (cnt_str(w_or_b_values, board[coordinate.first - 1][coordinate.second + 1])) {
+                //checks whether the value of the coordinate of the chessboard located at a distance of 1 diagonally (right 1 and up 1) is one of the values of the opponent's chess
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
             }
         }
         else if (free_coordinates[i].first == coordinate.first + 2 && free_coordinates[i].second == coordinate.second - 2) {
+            //the condition is that the coordinate of the free cell is 2 diagonally away (2 to the left and 2 down)
             if (cnt_str(w_or_b_values, board[coordinate.first + 1][coordinate.second - 1])) {
+                //checks whether the value of the coordinate of the chessboard located at a distance of 1 diagonally (left 1 and down 1) is one of the values of the opponent's chess
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
             }
         }
     }
 
-    for (size_t i = 0; i < possible_coordinates_1.size(); ++i) {
+    for (size_t i = 0; i < possible_coordinates_1.size(); ++i) { //fills it with possible coordinates located at a distance of 1 from the initial point
         possible_coordinates[i] = possible_coordinates_1[i];
     }
-    for (size_t i = 0; i < possible_coordinates_2.size(); ++i) {
+    for (size_t i = 0; i < possible_coordinates_2.size(); ++i) { //fills it with possible coordinates located at a distance of 2 from the initial point
         possible_coordinates[i + 4] = possible_coordinates_2[i];
     }
 
@@ -283,35 +300,38 @@ bool check_possible_coordinates(vector<Checker> white_checkers, vector<Checker> 
 
 
 vector<vector<Checker>> removing_eaten_checker(vector<vector<Checker>>& checkers, bool is_black, vector<pair<int, int>> possible_coordinates, pair<int, int> selected_coordinate, pair<int, int> coordinate_of_the_selected_num) {
-    int x_eaten_checker;
-    int y_eaten_checker;
-    for (size_t i = 0; i < possible_coordinates.size(); ++i) { //removing the eaten checkers
+    /*
+    removes dead checkers from the vectors
+    */
+    int x_eaten_checker; //the x-coordinate of the dead checker
+    int y_eaten_checker; //the y-coordinate of the dead checker
+    for (size_t i = 0; i < possible_coordinates.size(); ++i) {
         if (possible_coordinates[i] == selected_coordinate && i >= 4) {
-            int x_coordinate_difference = selected_coordinate.first - coordinate_of_the_selected_num.first;
-            int y_coordinate_difference = selected_coordinate.second - coordinate_of_the_selected_num.second;
+            int x_coordinate_difference = selected_coordinate.first - coordinate_of_the_selected_num.first; //the difference between the empty and transmitted x-coordinate
+            int y_coordinate_difference = selected_coordinate.second - coordinate_of_the_selected_num.second; //the difference between the empty and transmitted y-coordinate
 
-            if (x_coordinate_difference > 0) {
+            if (x_coordinate_difference > 0) { //the coordinate from the bottom of the transmitted one
                 x_eaten_checker = coordinate_of_the_selected_num.first + 1;
             }
-            else {
+            else { //the coordinate on top of the transmitted one
                 x_eaten_checker = coordinate_of_the_selected_num.first - 1;
             }
 
-            if (y_coordinate_difference > 0) {
+            if (y_coordinate_difference > 0) { //the coordinate to the right of the transmitted one
                 y_eaten_checker = coordinate_of_the_selected_num.second + 1;
             }
-            else {
+            else { //the coordinate to the left of the transmitted one
                 y_eaten_checker = coordinate_of_the_selected_num.second - 1;
             }
             
             pair<int, int> coordinate_eaten_checker = {x_eaten_checker, y_eaten_checker};
-            if (checkers[!is_black].size() == 1) {
+            if (checkers[!is_black].size() == 1) { //if the last piece remains in the array, then we return an empty one
                 checkers[!is_black] = {};
             }
             else {
                 for (size_t i = 0; i < checkers[!is_black].size(); ++i) {
-                    if (checkers[!is_black][i].get_coordinate() == coordinate_eaten_checker) {
-                        checkers[!is_black].erase(checkers[!is_black].begin() + i);
+                    if (checkers[!is_black][i].get_coordinate() == coordinate_eaten_checker) { //looking for a checker with the coordinate of a dead checker
+                        checkers[!is_black].erase(checkers[!is_black].begin() + i); //removes the dead checker from the vectors
                     }
                 }
             }
@@ -322,18 +342,21 @@ vector<vector<Checker>> removing_eaten_checker(vector<vector<Checker>>& checkers
 
 
 vector<vector<Checker>> user_move(vector<Checker>& white_checkers, vector<Checker>& black_checkers, bool is_black) {
+    /*
+    player's turn
+    */
     vector<vector<Checker>> checkers = {white_checkers, black_checkers};
     int selected_num;
     pair<int, int> selected_coordinate;
     pair<int, int> coordinate_of_the_selected_num;
-    vector<Checker> user_checkers = find_user_checkers(checkers[0], checkers[1], is_black);
-    vector<int> possible_numbers(12);
+    vector<Checker> user_checkers = find_user_checkers(checkers[0], checkers[1], is_black); //the vector of checkers that the current user is playing for (white or black)
+    vector<int> possible_numbers(12);  //possible numbers of the checkers
 
     if (is_black) {
-        cout << "\n\t ** black's move ** \n"; //!!!!! прописать правила игры !!!!!
+        cout << "\n\t ** black's move ** \n";
     }
     else {
-        cout << "\n\t ** white's move ** \n"; //!!!!! прописать правила игры !!!!!
+        cout << "\n\t ** white's move ** \n";
     }
     
     for (size_t i = 0; i < user_checkers.size(); ++i) { //possible numbers of the 'live' checkers
@@ -342,6 +365,7 @@ vector<vector<Checker>> user_move(vector<Checker>& white_checkers, vector<Checke
 
     cout << "\t Select the checker you're going to use and enter its number: ";
     cin >> selected_num;
+
     selected_num = check_possible_num(possible_numbers, selected_num);
     for (Checker C : user_checkers) {
         if (C.get_num() == selected_num) {
@@ -408,7 +432,6 @@ string game() {
         ans = user_move(white_checkers, black_checkers, is_black_move);
         white_checkers = ans[0];
         black_checkers = ans[1];
-
         is_black_move = !is_black_move;
         if (white_checkers.size() == 0) {
             winner = "black";
@@ -416,7 +439,8 @@ string game() {
         else if (black_checkers.size() == 0) {
             winner = "white";
         }
-    } while (winner == "_");
+        
+    } while ((winner == "_"));
 
     return winner;
 }
