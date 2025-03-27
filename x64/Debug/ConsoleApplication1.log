@@ -1,0 +1,6 @@
+﻿  checkers.cpp
+C:\Users\varya\source\repos\ConsoleApplication1\ConsoleApplication1\checkers.cpp(101,74): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\varya\source\repos\ConsoleApplication1\ConsoleApplication1\checkers.cpp(106,74): warning C4267: аргумент: преобразование из "size_t" в "int"; возможна потеря данных
+  mini_checkers.cpp
+  Создание кода...
+  ConsoleApplication1.vcxproj -> C:\Users\varya\source\repos\ConsoleApplication1\x64\Debug\ConsoleApplication1.exe
