@@ -20,7 +20,7 @@
 > github (https://github.com/xgorfo/checkers-a-project.git)
 
 ## Execution stack:
-> Windows.h
+> libraries from bits/stdc++.h
 
 
 ## Additional statement:
