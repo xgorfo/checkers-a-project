@@ -20,10 +20,10 @@
 > Windows.h
 
 ## Additional statement:
-> Sergey's code is committed by Anna.
-> Sergey is responsible for the verification.
-> Anna is responsible for the main part of the game.
-> Anfisa is responsible for the architecture and code of the style.
+> - Sergey's code is committed by Anna.
+> - Sergey is responsible for the verification.
+> - Anna is responsible for the main part of the game.
+> - Anfisa is responsible for the architecture and code of the style.
 
 ## How the game works: 
 > Our checkers games support two people playing on one device. You will see a field on which there are w and b. White and black, respectively. Ours has a shape check.
