@@ -33,16 +33,16 @@ class Checker {
 
 public:
     Checker(string w_or_b, int num, int i, int j) : w_or_b(w_or_b), num(num), coordinate({i, j})  {};
-    int get_num() {
+    int get_num() { //return number of the checker
         return num;
     }
-    string get_val() {
+    string get_val() { //returns in the <w/b><number of the checker> format
         return w_or_b + to_string(num);
     }
-    pair<int, int> get_coordinate() {
+    pair<int, int> get_coordinate() { //return coordinate of the checker
         return coordinate;
     }
-    void set_coordinate(pair<int, int>& selected_coordinate) {
+    void set_coordinate(pair<int, int>& selected_coordinate) { //set the coordinate of the checker
         coordinate = selected_coordinate;
     }
 };
@@ -63,10 +63,10 @@ vector<vector<string>> create_board(vector<Checker>& white_checkers, vector<Chec
         }
     }
 
-    for (Checker C : white_checkers) {
+    for (Checker C : white_checkers) { //fills in the coordinates of the chess field with the values of the white checkers
         board[C.get_coordinate().first][C.get_coordinate().second] = C.get_val();
     }
-    for (Checker C : black_checkers) {
+    for (Checker C : black_checkers) { //fills in the coordinates of the chess field with the values of the black checkers
         board[C.get_coordinate().first][C.get_coordinate().second] = C.get_val();
     }
 
@@ -116,6 +116,9 @@ vector<Checker> create_coordinates(bool is_black) {
 
 
 vector<Checker> find_user_checkers(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black) {
+    /*
+    returns the vector of checkers that the current user is playing for (white or black)
+    */
     vector<Checker> user_checkers;
     if (is_black) {
         for (size_t i = 0; i < black_checkers.size(); ++i) {
@@ -132,12 +135,15 @@ vector<Checker> find_user_checkers(vector<Checker> white_checkers, vector<Checke
 
 
 vector<pair<int, int>> find_free_coordinates(vector<Checker> white_checkers, vector<Checker> black_checkers) {
+    /*
+    finds all coordinates of empty cells (where there are no checkers)
+    */
     vector<pair<int, int>> free_coordinates;
     vector<vector<string>> board = create_board(white_checkers, black_checkers);
 
     for (int i = 1; i < 9; ++i) {
         for (int j = 1; j < 9; ++j) {
-            if (board[i][j] == " _ ") {
+            if (board[i][j] == " _ ") { //" _ " - empty cells
                 free_coordinates.push_back({i, j});
             }
         }
@@ -148,6 +154,9 @@ vector<pair<int, int>> find_free_coordinates(vector<Checker> white_checkers, vec
 
 
 vector<string> find_w_or_b_values(vector<Checker> w_or_b_checkers) {
+    /*
+    returns checkers values as a vector
+    */
     vector<string> w_or_b_values;
     for (Checker C : w_or_b_checkers) {
         w_or_b_values.push_back(C.get_val());
@@ -157,17 +166,21 @@ vector<string> find_w_or_b_values(vector<Checker> w_or_b_checkers) {
 
 
 vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers, vector<Checker> black_checkers, bool is_black, pair<int, int> coordinate) {
+    /*
+    finds all possible coordinates that a checker can resemble, the coordinates of which are passed by the argument of this function
+    */
     vector<pair<int, int>> free_coordinates = find_free_coordinates(white_checkers, black_checkers);
-    vector<pair<int, int>> possible_coordinates_1(4);
-    vector<pair<int, int>> possible_coordinates_2(4);
+    vector<pair<int, int>> possible_coordinates_1(4); //coordinates at a distance of 1 diagonally from the transmitted coordinate
+    vector<pair<int, int>> possible_coordinates_2(4); //coordinates at a distance of 2 diagonally from the transmitted coordinate
     vector<pair<int, int>> possible_coordinates(8);
     vector<vector<string>> board = create_board(white_checkers, black_checkers);
     vector<vector<Checker>> checkers = {white_checkers, black_checkers};
-    vector<string> w_or_b_values = find_w_or_b_values(checkers[!is_black]);
+    vector<string> w_or_b_values = find_w_or_b_values(checkers[!is_black]); //finds the values of the opponent's checkers
 
     for (size_t i = 0, j = 0; i < free_coordinates.size(); ++i) {
-        if (abs(free_coordinates[i].second - coordinate.second) == 1) {
-            if ((is_black && (free_coordinates[i].first - coordinate.first) == 1) || (!is_black && (free_coordinates[i].first - coordinate.first) == -1)) {
+        if (abs(free_coordinates[i].second - coordinate.second) == 1) { //the difference of the x-coordinates
+            if ((is_black && (free_coordinates[i].first - coordinate.first) == 1) || (!is_black && (free_coordinates[i].first - coordinate.first) == -1)) { //the difference of the y-coordinates
+                //the condition that the checker can only move towards the opponent (it cannot move backwards)
                 possible_coordinates_1[j] = free_coordinates[i];
                 ++j;
             }
@@ -175,12 +188,15 @@ vector<pair<int, int>> find_possible_coordinates(vector<Checker> white_checkers,
     }
     for (size_t i = 0, j = 0; i < free_coordinates.size(); ++i) {
         if (free_coordinates[i].first == coordinate.first + 2 && free_coordinates[i].second == coordinate.second + 2) {
+            //the condition is that the coordinate of the free cell is 2 diagonally away (2 to the right and 2 down)
             if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first + 1][coordinate.second + 1])) {
+                //checks whether the value of the coordinate of the chessboard located at a distance of 1 diagonally (right 1 and down 1) is one of the values of the opponent's chess
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
             }
         }
         else if (free_coordinates[i].first == coordinate.first - 2 && free_coordinates[i].second == coordinate.second - 2) {
+            //the condition is that the coordinate of the free cell is 2 diagonally away (2 to the left and 2 down)
             if (count(w_or_b_values.begin(), w_or_b_values.end(), board[coordinate.first - 1][coordinate.second - 1])) {
                 possible_coordinates_2[j] = free_coordinates[i];
                 ++j;
