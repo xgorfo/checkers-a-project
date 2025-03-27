@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
-#include <bits/stdc++.h>
 #include <string>
 
 using std::cin;
@@ -9,9 +8,20 @@ using std::cout;
 using std::vector;
 using std::pair;
 using std::string;
-using std::count;
 using std::endl;
-using std::__cxx11::to_string;
+using std::to_string;
+
+
+int cnt_str(vector<char> vec, char val) {
+    /*
+    counts the line of transmitted numbers in the transmitted vector
+    */
+    int countt = 0;
+    for (char s : vec) {
+        countt += (s == val);
+    }
+    return countt;
+}
 
 
 
@@ -21,12 +31,19 @@ void check() {
     int y;
     vector<char> letters = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
     vector<int> integers = {1, 2, 3, 4, 5, 6, 7, 8};
-    
+    int countt;
+
     do {
         cout << "enter the coordinates in this format: <capital letter> <number>" << endl;
         cout << "enter the initial coordinate of the checker: ";
         cin >> x >> y;
-    } while (count(letters.begin(), letters.end(), x) == 0 || count(integers.begin(), integers.end(), y) == 0);
+
+        countt = 0;
+        for (int s : integers) {
+            countt += (s == y);
+        }
+
+    } while (cnt_str(letters, x) == 0 || countt == 0);
     start = {x, y};
     cout << endl;
 
@@ -34,7 +51,13 @@ void check() {
         cout << "enter the coordinates in this format: <capital letter> <number>" << endl;
         cout << "enter the final coordinate of the checker: ";
         cin >> x >> y;
-    } while (count(letters.begin(), letters.end(), x) == 0 || count(integers.begin(), integers.end(), y) == 0);
+
+        countt = 0;
+        for (int s : integers) {
+            countt += (s == y);
+        }
+
+    } while (cnt_str(letters, x) == 0 || countt == 0);
     finish = {x, y};
     
     int startnum = start.first - 'a' + 1; //char -> int
