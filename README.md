@@ -27,4 +27,4 @@
 
 ## How the game works: 
 > Our checkers games support two people playing on one device. You will see a field on which there are w and b. White and black, respectively. Ours has a shape check.
-> You can reach the end of the field and get a > > new piece, namely the queen. The game ends when one of the players has no pieces left.
+> You can reach the end of the field and get a new piece, namely the queen. The game ends when one of the players has no pieces left.
