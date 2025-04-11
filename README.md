@@ -54,3 +54,29 @@
 > - Counts the number of occurrences of the number val in the vector vec.
 > - string multiplying_strings(string str, int cnt)
 > - Multiplies the string str by the number cnt (repeats it cnt times). If cnt == 0, returns an empty string.
+
+
+## Control report:
+### Points for Anna:
+> Amount of code.
+> Team building.
+> UI.
+> UX.
+
+### Points for Sergey:
+> Team building.
+> Amount of code.
+
+### Points for Anfisa:
+> Team building.
+> Architecture.
+> Teamleading.
+> Deadlines.
+
+### Points for team:
+> Architecture.
+> Bugs.
+> Presentation.
+> Code format.
+> Conditional rules of decency.
+> Meeting deadlines.
