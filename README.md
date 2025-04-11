@@ -58,25 +58,25 @@
 
 ## Control report:
 ### Points for Anna:
-> Amount of code.
-> Team building.
-> UI.
-> UX.
+> - Amount of code.
+> - Team building.
+> - UI.
+> - UX.
 
 ### Points for Sergey:
-> Team building.
-> Amount of code.
+> - Team building.
+> - Amount of code.
 
 ### Points for Anfisa:
-> Team building.
-> Architecture.
-> Teamleading.
-> Deadlines.
+> - Team building.
+> - Architecture.
+> - Teamleading.
+> - Deadlines.
 
 ### Points for team:
-> Architecture.
-> Bugs.
-> Presentation.
-> Code format.
-> Conditional rules of decency.
-> Meeting deadlines.
+> - Architecture.
+> - Bugs.
+> - Presentation.
+> - Code format.
+> - Conditional rules of decency.
+> - Meeting deadlines.
