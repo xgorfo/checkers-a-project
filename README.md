@@ -1,3 +1,5 @@
+## If you want to see how it looks like
+![image](https://github.com/user-attachments/assets/4ea6eb29-64b3-437d-8ece-9864902d052c)
 
   # Сheckers project
 ## Idea
